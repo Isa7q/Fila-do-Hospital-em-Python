@@ -1,6 +1,52 @@
-# Fila-do-Hospital-em-Python
-estou fazendo uma simulacao de uma fila de urgencia e idade em python
-#lista de pacientes do hospital.
+# **Sistema de Fila de Espera no Hospital com Priorização**
+
+Um hospital deseja organizar o atendimento de pacientes em uma **fila de espera** priorizando idosos e classificando os casos em **níveis de urgência**.
+
+## **Objetivo**
+
+1. Criar um sistema que:
+   - Classifique os pacientes em **alta urgência**, **média urgência** e **baixa urgência**.
+   - Priorize o atendimento de **idosos** (idade ≥ 60 anos).
+2. Exibir a ordem de atendimento considerando:
+   - A **urgência** (alta → média → baixa).  
+   - A **idade** (idosos têm prioridade dentro de cada nível de urgência).
+
+---
+
+## **Regras**
+
+1. Crie uma **classe** `Paciente` com os seguintes atributos:
+   - Nome do paciente.
+   - Idade.
+   - Classificação de urgência (**alta**, **média** ou **baixa**).  
+
+2. Crie uma **classe** `FilaHospital` com os seguintes métodos:
+   - `adicionar_paciente`: adiciona um paciente à fila.  
+   - `exibir_fila`: exibe a ordem de atendimento no formato:
+     ```
+     Alta urgência:
+     - Nome: Maria | Idade: 72 anos
+     - Nome: João | Idade: 65 anos
+
+     Média urgência:
+     - Nome: Lucas | Idade: 50 anos
+
+     Baixa urgência:
+     - Nome: Ana | Idade: 34 anos
+     ```
+   - `proximo_paciente`: remove e retorna o próximo paciente na ordem de atendimento.
+
+3. A prioridade de atendimento segue a ordem:
+   - **Alta urgência** > **Média urgência** > **Baixa urgência**.
+   - Dentro de cada categoria de urgência, **idosos (idade ≥ 60 anos)** têm prioridade.
+
+---
+
+## **Dados de Entrada**
+
+Os dados fornecidos são:  
+
+```python
 pacientes = [
     {"nome": "Maria", "idade": 72, "urgencia": "alta"},
     {"nome": "Lucas", "idade": 50, "urgencia": "média"},
@@ -10,89 +56,51 @@ pacientes = [
     {"nome": "Pedro", "idade": 80, "urgencia": "alta"},
     {"nome": "Carla", "idade": 59, "urgencia": "baixa"}
 ]
+```
+## **Formato de Saída**
 
-#fazendo o codigo para charmar o paciente com nivel de urgencia, alta, media e baixa.
-class Paciente:
-     def __init__(self, nome, idade, urgencia):#
-        self.nome = nome # nome do paciente 
-        self.idade = idade # idade do paciente
-        self.urgencia = urgencia # grau de urgencia(baixa, media, alta)
+A exibição inicial da fila de atendimento deve ser:
 
-     def __repr__(self):
-         return f"Nome: {self.nome}, Idade: {self.idade}, Urgencia: {self.urgencia}"
-     
-     def prioridade_idoso(self):# criando a priorida para pacientes idosos com idade ≥ 60
-         """Retornar True se o paciente for idoso (idade ≥ 60), para priorizacao."""
-         return self.idade >= 60
-     def apresentar(self):
-         print(f"Paciente({self.nome}, {self.idade}, {self.urgencia}),")
 
-         #Criando a Fila do Hospital
-class FilaHospital:
-     def __init__(self):
-        #Dicionario para organizar os pacientes com nivel e urgencia
-        self.fila = {"alta":[], "média": [], "baixa": []} 
+Ordem de Atendimento
 
-     def adicionar_paciente(self, paciente):
-         """adicona um paciente a fila com base na urgencia."""
-         if paciente.urgencia in self.fila:
-            self.fila[paciente.urgencia].append(paciente)
-            # print(f"Adicioando: {paciente.nome} | Idade: {paciente.idade} | Urgenica: {paciente.urgencia}")
-         else:
-             print(f"Erro: urgencia '{paciente.urgencia}' invalida!")
+Alta urgência:
+- Nome: Pedro | Idade: 80 anos
+- Nome: Maria | Idade: 72 anos
+- Nome: João | Idade: 65 anos
 
-     def exibir_fila(self): #exibir fila dos pacinetes
-         """Exibir a Ordem de atendimento, organizada por nivel de urgencia e prioridade de idade"""         
-         print("Ordem de Atendimento\n")
+Média urgência:
+- Nome: Lucas | Idade: 50 anos
+- Nome: Clara | Idade: 28 anos
 
-         for urgencia in ["alta", "média", "baixa"]:
-             print(f"{urgencia.capitalize()} urgencia")
-             # ordena os pacientes por prioridade (idoso > mais velho)
-             pacientes_urgencia = sorted(self.fila[urgencia], key=lambda p: (p.prioridade_idoso(), p.idade), reverse=True)
-         
-             for paciente in pacientes_urgencia:
-                 print(f"- Nome: {paciente.nome} | Idade: {paciente.idade}, anos")
-             print() #adiciona linha em branco entre os niveis de urgencia
+Baixa urgência:
+- Nome: Carla | Idade: 59 anos
+- Nome: Ana | Idade: 34 anos
+```
+---
 
-     def proximo_paciente(self):# cahamdno proximo proximo paciente e removendo da fila
-         """Remove e retorna o proximo paciente na ordem de atendimente, considerando urgencia e idade."""
-         # Prioridade: alta > media > baixa 
-         for nivel in ["alta", "média", "baixa"]:
-             if self.fila[nivel]:
-            #Reorganizar a lista de pacientes a cada chama para garantir a prioridade correta
-                self.fila[nivel]= sorted(self.fila[nivel], key=lambda p:(p.prioridade_idoso(), p.idade), reverse=True)     
-                paciente = self.fila[nivel].pop(0)#remove o primeiro da fila
-                return paciente
-         print("A fila esta vazia")
-         return None 
-     
-     # Dados de alguns Pacientes
-pacientes = [
-     Paciente("Maria", 72, "alta"),
-     Paciente("Lucas", 50, "média"),
-     Paciente("Ana", 34, "baixa"),
-     Paciente("João", 65, "alta"),
-     Paciente("Clara", 28, "média"),
-     Paciente("Pedro", 80, "alta"),
-     Paciente("Carla", 59, "baixa"),
-]
+Ao chamar o método `proximo_paciente`, deve exibir:
+```
+Próximo paciente
+- Nome: Pedro | Idade: 80 anos | Urgência: Alta
+```
 
-# criando a fila do hospital
-fila_hospital = FilaHospital()
+---
 
-# Adicionando os pacienes a Fila
-for paciente in pacientes:
-    fila_hospital.adicionar_paciente(paciente)
-    
-#Exibindo a fila
-fila_hospital.exibir_fila()
+Após o atendimento do próximo paciente, a fila deve ser exibida assim:
 
-# Chamar o proximo paciente
-print("Chamando o proximo paciente:")
-proximo = fila_hospital.proximo_paciente()
-if proximo:
-    print(f"Atendimento: Nome: {proximo.nome} | Idade: {proximo.idade} anos | Urgência: {proximo.urgencia}\n") 
+```
+Ordem de Atendimento
 
-#exibir a fila novamente apos o atendimento
-# print("Fila atualizada:")
-fila_hospital.exibir_fila()
+Alta urgência:
+- Nome: Maria | Idade: 72 anos
+- Nome: João | Idade: 65 anos
+
+Média urgência:
+- Nome: Lucas | Idade: 50 anos
+- Nome: Clara | Idade: 28 anos
+
+Baixa urgência:
+- Nome: Carla | Idade: 59 anos
+- Nome: Ana | Idade: 34 anos
+```
